@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { PostModel } from './models/PostModel';
 
 // components
+import Form from './components/Form';
 import Post from './components/Post';
 
 function App() {
@@ -12,19 +13,23 @@ function App() {
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
 
   useEffect(() => {
-    fetch('https://jsonplaceholder.typicode.com/posts')
-      .then(res => res.json())
-      .then(
-        (result) => {
-          setIsLoaded(true);
-          handleLikesGeneration(result);
-        },
-        (error) => {
-          setIsLoaded(true);
-          setError(error);
-        }
-      )
+    fetchData();
   }, [])
+
+  const fetchData = () => {
+    fetch('https://jsonplaceholder.typicode.com/posts')
+    .then(res => res.json())
+    .then(
+      (result) => {
+        setIsLoaded(true);
+        handleLikesGeneration(result);
+      },
+      (error) => {
+        setIsLoaded(true);
+        setError(error);
+      }
+    )
+  }
 
   const handleLikesGeneration = (result: Array<any>) => {
     const newResult: Array<any> = [];
@@ -61,6 +66,23 @@ function App() {
     setData(sortedData) 
   }
 
+  const handleSearchFilter = (e: any) => {
+    e.preventDefault();
+    const allPosts = [...data];
+    const searchQuery = e.target[0].value.toLowerCase();
+
+    if (searchQuery.length === 0) {
+      fetchData();
+
+    } else {
+      const filteredPosts = allPosts.filter(post => {
+        return post.title.toLowerCase().includes(searchQuery);
+      });
+
+      setData(filteredPosts);
+    }
+  }
+
   if (error) {
     return <div>Error: {error.message}</div>
   } else if (!isLoaded) {
@@ -68,6 +90,7 @@ function App() {
   } else {
     return (
       <div className="App">
+        <Form handleSearchFilter={handleSearchFilter} />
         {
           data.map((item, index) => (
             <Post
