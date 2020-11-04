@@ -3,6 +3,9 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import Container from '@material-ui/core/Container';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { makeStyles } from '@material-ui/core/styles';
+import Pagination from '@material-ui/lab/Pagination';
+import { Grid } from '@material-ui/core';
+
 // models
 import { PostModel } from './models/PostModel';
 
@@ -12,24 +15,27 @@ import Form from './components/Form';
 import Post from './components/Post';
 
 const useStyles = makeStyles((theme) => ({
-  root: {
-    display: 'flex',
-    '& > * + *': {
-      marginLeft: theme.spacing(2),
-    },
-  },
+  navbar: {
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "flex-end"
+  }
 }));
 
 function App() {
   const [data, setData] = useState<PostModel[]>([]);
+  const [amountOfPosts, setAmountOfPosts] = useState<number>(0)
   const [error, setError] = useState<any>();
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
+  const [currentPage, setCurrentPage] = useState<number>(1);
 
   const classes = useStyles();
 
+  const amountPerPage = 10;
+
   useEffect(() => {
     fetchData();
-  }, [])
+  }, [currentPage])
 
   const fetchData = () => {
     fetch('https://jsonplaceholder.typicode.com/posts')
@@ -37,7 +43,8 @@ function App() {
     .then(
       (result) => {
         setIsLoaded(true);
-        handleLikesGeneration(result);
+        setAmountOfPosts(result.length)
+        handlePostsGeneration(result);
       },
       (error) => {
         setIsLoaded(true);
@@ -46,17 +53,20 @@ function App() {
     )
   }
 
-  const handleLikesGeneration = (result: Array<any>) => {
+  const handlePostsGeneration = (result: Array<any>) => {
     const newResult: Array<any> = [];
 
-    result.forEach((item) => {
-      const randomNumber = Math.floor((Math.random() * 10) + 1);
-      item.likes = randomNumber;
-      newResult.push(item)
-    })
-
-    const sortedData = newResult.sort((a, b) => (a.likes < b.likes) ? 1 : -1);
-
+    const indexOfLastPost = currentPage * amountPerPage;
+    const indexOfFirstPost = indexOfLastPost - amountPerPage;
+    
+    for(let i = 0; i < result.length; i++) {
+      result[i].likes = i;
+      newResult.push(result[i])
+    }
+    
+    const currentPosts = newResult.slice(indexOfFirstPost, indexOfLastPost);
+    const sortedData = currentPosts.sort((a, b) => (a.likes < b.likes) ? 1 : -1);
+    
     setData(sortedData);
   }
 
@@ -71,37 +81,36 @@ function App() {
   const handleLikeIncrement = (id: number) => {
     const newPosts = [...data];
     const foundPost: any = newPosts.find(item => item.id === id);
-    
     if (foundPost) {
       foundPost.likes += 1;
     }
-
     const sortedData = newPosts.sort((a, b) => (a.likes < b.likes) ? 1 : -1);
-
     setData(sortedData) 
   }
 
   const handleSearchFilter = (e: any) => {
     e.preventDefault();
-
     const allPosts = [...data];
     const searchQuery = e.target[0].value.toLowerCase();
-
     if (searchQuery.length === 0) {
       fetchData();
     } else {
-      const filteredPosts = allPosts.filter(post => {
-        return post.title.toLowerCase().includes(searchQuery);
-      });
-      setData(filteredPosts);
+        const filteredPosts = allPosts.filter(post => {
+          return post.title.toLowerCase().includes(searchQuery);
+        });
+        setData(filteredPosts);
     }
+  }
+
+  const handlePagination = (event: any, value: number) => {
+    setCurrentPage(value);
   }
 
   if (error) {
     return <div>Error: {error.message}</div>
   } else if (!isLoaded) {
     return (
-      <div className={classes.root}>
+      <div>
         <h1>Loading...</h1>
         <CircularProgress />
       </div>
@@ -112,7 +121,10 @@ function App() {
         <CssBaseline />
         <Container>
             <Header />
-            <Form handleSearchFilter={handleSearchFilter} />
+            <Grid item xs={12} className={classes.navbar}>
+              <Pagination count={amountOfPosts / amountPerPage} onChange={handlePagination} />
+              <Form handleSearchFilter={handleSearchFilter} />
+            </Grid>
             {
               data.map((item, index) => (
                   <Post
@@ -123,6 +135,7 @@ function App() {
                   />
               ))
             }
+            <Pagination count={amountOfPosts / amountPerPage} onChange={handlePagination} />
         </Container>
       </>
     );

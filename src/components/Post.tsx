@@ -68,7 +68,7 @@ const Post = ({post, handleLikeIncrement, handleRemoveItem, ...props}: Props) =>
         <p>{post.body}</p>
       </Grid>
 
-      <Grid container lg={2} xs={12} className={classes.buttonGroup}>
+      <Grid item lg={2} xs={12} className={classes.buttonGroup}>
         <Grid item className={classes.likesContainer}>
           <Fab size="small" color="secondary">
             <FavoriteIcon onClick={() => handleLikeIncrement(post.id)}>Like</FavoriteIcon>
