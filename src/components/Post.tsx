@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 // models
 import { PostModel } from '../models/PostModel';
@@ -10,8 +10,6 @@ type Props = {
 }
 
 const Post = ({post, handleLikeIncrement, handleRemoveItem, ...props}: Props) => {
-  const [likes, setLikes] = useState(post.likes);
-
   return (
     <div>
       <h1>{post.title}</h1>
