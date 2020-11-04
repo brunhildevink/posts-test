@@ -1,6 +1,6 @@
 {
   "name": "posts",
-  "homepage": "http://brunhildevink.github.io/posts-test",
+  "homepage": "https://brunhildevink.github.io/posts-test/",
   "version": "0.1.0",
   "private": true,
   "dependencies": {

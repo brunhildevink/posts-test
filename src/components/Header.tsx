@@ -4,7 +4,8 @@ import { makeStyles } from '@material-ui/core/styles';
 const useStyles = makeStyles((theme) => ({
   headerTitle: {
     marginTop: "100px",
-    fontSize: "1.6em"
+    fontSize: "1.6em",
+    fontFamily: "roboto, sans serif"
   }
 }));
 
