@@ -68,17 +68,16 @@ function App() {
 
   const handleSearchFilter = (e: any) => {
     e.preventDefault();
+
     const allPosts = [...data];
     const searchQuery = e.target[0].value.toLowerCase();
 
     if (searchQuery.length === 0) {
       fetchData();
-
     } else {
       const filteredPosts = allPosts.filter(post => {
         return post.title.toLowerCase().includes(searchQuery);
       });
-
       setData(filteredPosts);
     }
   }
