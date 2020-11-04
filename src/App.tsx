@@ -5,7 +5,6 @@ import { PostModel } from './models/PostModel';
 
 // components
 import Post from './components/Post';
-import { kill } from 'process';
 
 function App() {
   const [data, setData] = useState<PostModel[]>([]);
