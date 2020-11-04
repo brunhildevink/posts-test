@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
-//models
+// models
 import { PostModel } from './models/PostModel';
 
 // components
@@ -18,7 +18,6 @@ function App() {
         (result) => {
           setIsLoaded(true);
           handleLikesGeneration(result);
-          // setData(result);
         },
         (error) => {
           setIsLoaded(true);
@@ -36,7 +35,9 @@ function App() {
       newResult.push(item)
     })
 
-    setData(newResult);
+    const sortedData = newResult.sort((a, b) => (a.likes < b.likes) ? 1 : -1);
+
+    setData(sortedData);
   }
 
   const handleRemoveItem = (id: number) => {
@@ -55,8 +56,7 @@ function App() {
       foundPost.likes += 1;
     }
 
-    setData(newPosts)
-    
+    setData(newPosts) 
   }
 
   if (error) {
