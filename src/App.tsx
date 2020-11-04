@@ -56,7 +56,9 @@ function App() {
       foundPost.likes += 1;
     }
 
-    setData(newPosts) 
+    const sortedData = newPosts.sort((a, b) => (a.likes < b.likes) ? 1 : -1);
+
+    setData(sortedData) 
   }
 
   if (error) {
