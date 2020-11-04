@@ -5,6 +5,7 @@ import { PostModel } from './models/PostModel';
 
 // components
 import Post from './components/Post';
+import { kill } from 'process';
 
 function App() {
   const [data, setData] = useState<PostModel[]>([]);
@@ -17,7 +18,8 @@ function App() {
       .then(
         (result) => {
           setIsLoaded(true);
-          setData(result);
+          handleLikesGeneration(result);
+          // setData(result);
         },
         (error) => {
           setIsLoaded(true);
@@ -26,6 +28,38 @@ function App() {
       )
   }, [])
 
+  const handleLikesGeneration = (result: Array<any>) => {
+    const newResult: Array<any> = [];
+
+    result.forEach((item) => {
+      const randomNumber = Math.floor((Math.random() * 10) + 1);
+      item.likes = randomNumber;
+      newResult.push(item)
+    })
+
+    setData(newResult);
+  }
+
+  const handleRemoveItem = (id: number) => {
+    const newPosts = [...data];
+    const foundPost: any = newPosts.find(item => item.id === id);
+    const index = newPosts.indexOf(foundPost);
+    newPosts.splice(index, 1);
+    setData(newPosts);
+  }
+
+  const handleLikeIncrement = (id: number) => {
+    const newPosts = [...data];
+    const foundPost: any = newPosts.find(item => item.id === id);
+    
+    if (foundPost) {
+      foundPost.likes += 1;
+    }
+
+    setData(newPosts)
+    
+  }
+
   if (error) {
     return <div>Error: {error.message}</div>
   } else if (!isLoaded) {
@@ -33,7 +67,16 @@ function App() {
   } else {
     return (
       <div className="App">
-        {data.map((item, index) => <Post key={index} post={item}/>)}
+        {
+          data.map((item, index) => (
+            <Post
+              key={index}
+              handleLikeIncrement={handleLikeIncrement}
+              handleRemoveItem={handleRemoveItem}
+              post={item}
+            />
+          ))
+        }
       </div>
     );
   }
