@@ -31,7 +31,7 @@ function App() {
 
   const classes = useStyles();
 
-  const amountPerPage = 10;
+  const amountPerPage = 4;
 
   useEffect(() => {
     fetchData();
@@ -110,34 +110,30 @@ function App() {
     return <div>Error: {error.message}</div>
   } else if (!isLoaded) {
     return (
-      <div>
+      <>
         <h1>Loading...</h1>
         <CircularProgress />
-      </div>
+      </>
     ) 
   } else {
     return (
-      <>
-        <CssBaseline />
-        <Container>
-            <Header />
-            <Grid item xs={12} className={classes.navbar}>
-              <Pagination count={amountOfPosts / amountPerPage} onChange={handlePagination} />
-              <Form handleSearchFilter={handleSearchFilter} />
-            </Grid>
-            {
-              data.map((item, index) => (
-                  <Post
-                    key={index}
-                    handleLikeIncrement={handleLikeIncrement}
-                    handleRemoveItem={handleRemoveItem}
-                    post={item}
-                  />
-              ))
-            }
+      <Container>
+          <Header />
+          <Grid item xs={12} className={classes.navbar}>
             <Pagination count={amountOfPosts / amountPerPage} onChange={handlePagination} />
-        </Container>
-      </>
+            <Form handleSearchFilter={handleSearchFilter} />
+          </Grid>
+          {
+            data.map((item, index) => (
+                <Post
+                  key={index}
+                  handleLikeIncrement={handleLikeIncrement}
+                  handleRemoveItem={handleRemoveItem}
+                  post={item}
+                />
+            ))
+          }
+      </Container>
     );
   }
 }
