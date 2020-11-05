@@ -38,7 +38,13 @@ const useStyles = makeStyles((theme) => ({
     margin: "20px 0",
     padding: "20px",
     display: "flex",
-    alignItems: "center"
+    alignItems: "center",
+    boxShadow: "0px 2px 6px 0px rgba(50, 50, 50, 0.1)",
+    [theme.breakpoints.down('md')]: {
+      margin: "0",
+      marginTop: "20px",
+      padding: "0"
+    }
   },
   buttonGroup: {
     marginTop: "30px",

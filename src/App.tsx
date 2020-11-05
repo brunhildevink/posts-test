@@ -16,9 +16,11 @@ import Post from './components/Post';
 
 const useStyles = makeStyles((theme) => ({
   navbar: {
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "flex-end"
+    [theme.breakpoints.up('md')]: {
+      display: "flex",
+      justifyContent: "space-between",
+      alignItems: "flex-end"
+    }
   }
 }));
 
@@ -121,9 +123,13 @@ function App() {
     return (
       <Container>
           <Header />
-          <Grid item xs={12} className={classes.navbar}>
-            <Pagination count={amountOfPosts / amountPerPage} onChange={handlePagination} />
-            <Form handleSearchFilter={handleSearchFilter} />
+          <Grid className={classes.navbar}>
+            <Grid item xs={12} lg={6}>
+              <Pagination count={amountOfPosts / amountPerPage} onChange={handlePagination} />
+            </Grid>
+            <Grid item xs={12} lg={6}>
+              <Form handleSearchFilter={handleSearchFilter} />
+            </Grid>
           </Grid>
           {
             data.map((item, index) => (

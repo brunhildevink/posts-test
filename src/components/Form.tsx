@@ -9,8 +9,15 @@ type Props = {
 
 const useStyles = makeStyles((theme) => ({
   formContainer: {
-    display: "flex",
-    justifyContent: "flex-end"
+    [theme.breakpoints.up('md')]: {
+      display: "flex",
+      justifyContent: "flex-end"
+    },
+  },
+  form: {
+    [theme.breakpoints.down('md')]: {
+      width: "100%"
+    }
   }
 }));
 
@@ -19,8 +26,8 @@ const Form = ({ handleSearchFilter }: Props) => {
 
   return (
     <Grid className={classes.formContainer}>
-      <form onSubmit={handleSearchFilter}>
-        <TextField label="Search by title" variant="standard" type="text" />
+      <form className={classes.form} onSubmit={handleSearchFilter}>
+        <TextField className={classes.form} label="Search by title" variant="standard" type="text" />
       </form>
     </Grid>
   )
