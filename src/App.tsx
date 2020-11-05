@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import CssBaseline from '@material-ui/core/CssBaseline';
+
+// material UI
 import Container from '@material-ui/core/Container';
-import CircularProgress from '@material-ui/core/CircularProgress';
 import { makeStyles } from '@material-ui/core/styles';
 import Pagination from '@material-ui/lab/Pagination';
-import { Grid } from '@material-ui/core';
+import { Box, Grid } from '@material-ui/core';
+import { Skeleton } from '@material-ui/lab';
 
 // models
 import { PostModel } from './models/PostModel';
@@ -33,10 +34,7 @@ function App() {
 
   const amountPerPage = 4;
 
-  useEffect(() => {
-    fetchData();
-  }, [currentPage])
-
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const fetchData = () => {
     fetch('https://jsonplaceholder.typicode.com/posts')
     .then(res => res.json())
@@ -53,13 +51,17 @@ function App() {
     )
   }
 
+  useEffect(() => {
+    fetchData();
+  }, [currentPage, fetchData])
+
   const handlePostsGeneration = (result: Array<any>) => {
     const newResult: Array<any> = [];
 
     const indexOfLastPost = currentPage * amountPerPage;
     const indexOfFirstPost = indexOfLastPost - amountPerPage;
     
-    for(let i = 0; i < result.length; i++) {
+    for(let i = 0; i < result.reverse().length; i++) {
       result[i].likes = i;
       newResult.push(result[i])
     }
@@ -108,13 +110,6 @@ function App() {
 
   if (error) {
     return <div>Error: {error.message}</div>
-  } else if (!isLoaded) {
-    return (
-      <>
-        <h1>Loading...</h1>
-        <CircularProgress />
-      </>
-    ) 
   } else {
     return (
       <Container>
@@ -123,16 +118,20 @@ function App() {
             <Pagination count={amountOfPosts / amountPerPage} onChange={handlePagination} />
             <Form handleSearchFilter={handleSearchFilter} />
           </Grid>
-          {
-            data.map((item, index) => (
+            {(!isLoaded ? Array.from(new Array(4)) : data).map((item, index) => (
+              item ? (
                 <Post
                   key={index}
                   handleLikeIncrement={handleLikeIncrement}
                   handleRemoveItem={handleRemoveItem}
                   post={item}
                 />
-            ))
-          }
+              ) : (
+                <Box>
+                  <Skeleton animation="wave" width="100%" height={240} />
+                </Box>
+              )
+            ))}
       </Container>
     );
   }
