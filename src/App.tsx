@@ -59,10 +59,12 @@ function App() {
     const indexOfLastPost = currentPage * amountPerPage;
     const indexOfFirstPost = indexOfLastPost - amountPerPage;
     
-    for(let i = 0; i < result.reverse().length; i++) {
+    for(let i = 0; i < result.length; i++) {
       result[i].likes = i;
       newResult.push(result[i])
     }
+
+    newResult.reverse();
     
     const currentPosts = newResult.slice(indexOfFirstPost, indexOfLastPost);
     const sortedData = currentPosts.sort((a, b) => (a.likes < b.likes) ? 1 : -1);
