@@ -59,7 +59,7 @@ function App() {
     const indexOfLastPost = currentPage * amountPerPage;
     const indexOfFirstPost = indexOfLastPost - amountPerPage;
     
-    for(let i = 0; i < result.length; i++) {
+    for(let i = 0; i < result.reverse().length; i++) {
       result[i].likes = i;
       newResult.push(result[i])
     }
